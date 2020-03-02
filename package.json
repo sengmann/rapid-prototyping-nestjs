@@ -1,0 +1,13 @@
+{
+  "name": "micro-session-02-nestjs-prototyping",
+  "version": "1.0.0",
+  "description": "Microsession Prototyping mit NestJS, TypeORM und Angular",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sascha Engmann",
+  "license": "ISC",
+  "devDependencies": {
+    "@thecodecampus/tcc-cli": "^1.3.2"
+  }
+}
