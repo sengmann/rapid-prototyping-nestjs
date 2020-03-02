@@ -58,8 +58,13 @@ genau das tun.
 ## Umgebung mit NX einrichten
 
 ```bash
-npx create-nx-workspace@latest prototype
+npx create-nx-workspace@latest
 ```
+
+Vergebe den Workspace Namen `tss` und den Application Namen `workshop-prototype`. Wähle das Preset
+`Angular-Nest` aus und die Style Extension Sass.
+
+Sobald die Generierung abgeschlossen ist verschiebe den Inhalt des Verzeichnis `tss` in die Project-Root.
 
 Ergänze die `prototype/package.json` den Eintrag `scripts` um ein Script zum Starten des Backends.
 
