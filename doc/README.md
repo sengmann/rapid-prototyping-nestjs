@@ -28,7 +28,7 @@ es Unterstützung für die Versionierung und automatisierte Datenbankschema-Migr
 ### Was ist NX?
 
 Nx ist eine Erweiterung und Aufsatz auf das Angular Command Line Interface.
-Es stellt einen Workspace bereit und bietet Werkzeuge zum Beispiel Code zu generieren,
+Es stellt einen Workspace bereit und bietet Werkzeuge um zum Beispiel Code zu generieren,
 das Build-System zu bedienen, oder aber auch Tests zu starten.
 
 Zusätzlich bietet Nx Werkzeuge um Abhängigkeiten innerhalb des Projekts zu steuern
