@@ -126,7 +126,52 @@ lokalen Installation erzeugt werden.
 
 ### Installieren TypeORM und typeorm-model-generator
 
+Aus einer bestehenden Datenbank möchten wir uns die Klassen des ORM-Mappings generieren lassen.
+Dazu nutzen wir im nächsten Schritt den `typeorm-model-generator`. Wir installieren die 
+Abhängigkeiten dazu gleich mit. Zusätzlich wird auch der Datenbank-Treiber für die Verbindung
+zum Microsoft SQL Server installiert.
+
+```bash
+npm install typeorm @nestjs/typeorm typeorm-model-generator mssql
+```
+
+In `apps/api/src/AppModule` muss im Decorator unter `imports` TypeormModule eingefügt werden.
+Sollte nicht die Datenbank über die `docker-compose.yml` verwendet werden, müssen eventuell 
+die Zugangsdaten angepasst werden.
+
+```typescript
+@Module({
+  imports: [TypeOrmModule.forRoot({
+    name: "default",
+    type: "mssql",
+    host: "localhost",
+    port: 1433,
+    username: "sa",
+    password: "s4fePassword",
+    database: "workshop_prototype",
+    schema: "dbo",
+    synchronize: false,
+    entities: []
+  })],
+  controllers: [AppController],
+  providers: [AppService]
+})
+export class AppModule {}
+```
+
+
 ### Generierung der Entity
+
+Um nun die Entities direkt aus der Datenbank erzeugen zu lassen, nutzen wir den 
+`typeorm-model-generator`. Sollte nicht die Datenbank über die `docker-compose.yml`
+verwendet werden, müssen eventuell die Zugangsdaten angepasst werden.
+
+```bash
+npx typeorm-model-generator -h localhost -d "workshop_prototype" -u sa -x s4fePassword -e mssql -o ./apps/api/src
+```
+
+Der Weg wie die Entities generiert werden führt dazu, dass wir in der Datei `/ts-config.json`
+das Modul-system auf CommonJS umstellen müssen.
 
 ### Definition Schnittstelle zwischen Backend und Frontend
 
