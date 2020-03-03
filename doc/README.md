@@ -170,8 +170,11 @@ verwendet werden, müssen eventuell die Zugangsdaten angepasst werden.
 npx typeorm-model-generator -h localhost -d "workshop_prototype" -u sa -x s4fePassword -e mssql -o ./apps/api/src
 ```
 
-Der Weg wie die Entities generiert werden führt dazu, dass wir in der Datei `/ts-config.json`
-das Modul-system auf CommonJS umstellen müssen.
+Der Weg wie die Entities generiert werden führt dazu, dass wir in der Datei `apps/api/tsconfig.json`
+das Modul-system auf CommonJS umstellen müssen. 
+
+In `apps/api/src/app/app.module.ts` müssen die generierten Entity Klassen in das Array der `entries`
+eingetragen werden.
 
 ### Definition Schnittstelle zwischen Backend und Frontend
 
