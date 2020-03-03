@@ -178,6 +178,40 @@ eingetragen werden.
 
 ### Definition Schnittstelle zwischen Backend und Frontend
 
+Es ist sinnvoll die Entities nicht 1:1 vom Backend zum Frontend zu senden. Um diese Trennung besser umsetzbar
+zu machen wird im `api-interfaces` Projekt ein Vertrag in Form von Interfaces geschlossen.
+
+```typescript
+export interface IStandort {
+  id: number;
+  autolineId: string;
+  name: string;
+}
+
+export interface INiederlassung {
+  id: number;
+  gssn: string
+  name: string | null;
+  standorte: IStandort[]
+}
+
+export interface IKfz {
+  id: number;
+  regno: string | null;
+  besitzer: string | null;
+}
+
+export type IReperaturStatus = 'Termin' | 'Annahme' | 'Service' | 'Werkstatt' | 'Wäsche' | 'Abholung' | 'Abgeschlossen';
+
+export interface IReperatur {
+  id: number;
+  auftrag: string | null;
+  standort: IStandort,
+  kfz: IKfz,
+  reperaturStatus: IReperaturStatus
+}
+```
+
 ### API Endpunkte für Stammdaten
 
 ### API Endpunkt für Reparaturen
