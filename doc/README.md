@@ -214,14 +214,22 @@ export interface IReperatur {
 
 ### API Endpunkte für Stammdaten
 
+Die Datenbank Zugriffe sollen in einem eigenen Service gekapselt sein. Mittels Angular CLI lässt sich ein neuer NestJS
+Service generieren. Im Datenbankservice kann per Injection die Connection injiziert werden.
+
+```bash
+ng generate @nestjs/schematics:service db --sourceRoot=apps/api/src/app --flat=true
+```
+
+In `apps/api/src/app/app.controller.ts` werden neue REST Endpunkte für GET Requests der Stammdaten eingefügt.
+
+```typescript
+@Get('niederlassung')
+  async getNiederlassungen(): Promise<Niederlassung[]> {
+    return this.dbService.loadAllNiederlassungen();
+  }
+```
+
 ### API Endpunkt für Reparaturen
 
-### Testen des Backends
-
 ### Anpassen der Datenbank mittels Migration
-
-## Entwicklung Frontend
-
-## Schreiben von E2E Tests
-
-
