@@ -80,7 +80,7 @@ Ergänze die `prototype/package.json` den Eintrag `scripts` um ein Script zum St
 ## Bibliothek für geteilten Code zwischen Backend und Frontend einrichten
 
 Um Code zwischen Backend und Frontend teilen zu können, schreiben wir geteilten Code
-in ein oder mehrere Bibliotheks-Projekte. Zu diesem Zweck bietet sich die Verwendung
+in ein oder mehrere Bibliothek-Projekte. Zu diesem Zweck bietet sich die Verwendung
 des `@nrwl/workspace` Schematic an.
 
 ```bash
@@ -90,7 +90,7 @@ ng g @nrwl/workspace:lib shared
 ## Abgrenzungen von Abhängigkeiten
 
 Um zu vermeiden das jedes Teilprojekt beliebig Code aus fremden Teilprojekten importieren kann,
-können wir Constraints setzen. Jedes Prokjekt kann in der `nx.json` Datei Tags besitzen. In 
+können wir Constraints setzen. Jedes Projekt kann in der `nx.json` Datei Tags besitzen. In 
 der `ts-lint.json` können diese genutzt werden um den Import auf bestimmte Tags zu beschränken.
 
 Füge in der nx.json zu jedem Teilprojekt ein Tag ein. Für das Frontend Projekt verwende den Tag
