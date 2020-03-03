@@ -28,6 +28,7 @@ module.exports = {
         [
             "05-generate-entity/solution",
             "06-define-interfaces/start",
+            "06-define-interfaces/solution",
         ],
         [
             "06-define-interfaces/solution",
