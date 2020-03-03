@@ -93,3 +93,53 @@ Um zu vermeiden das jedes Teilprojekt beliebig Code aus fremden Teilprojekten im
 können wir Constraints setzen. Jedes Prokjekt kann in der `nx.json` Datei Tags besitzen. In 
 der `ts-lint.json` können diese genutzt werden um den Import auf bestimmte Tags zu beschränken.
 
+Füge in der nx.json zu jedem Teilprojekt ein Tag ein. Für das Frontend Projekt verwende den Tag
+`scope:frontend`, für das API Projekt den Tag `scope:backend` und für die beiden Bibliotheken
+den Tag `scope:lib`.
+
+Erweitere in der `ts-lint.json` die Einschränkung der Imports so, dass Projekte mit dem Tag `scope:lib`
+nur aus anderen Projekten mit dem Tag `scope:lib` importieren dürfen. Frontend-Projekte dürfen aus
+anderen Frontend-Projekten importieren und aus Bibliotheken. Analog dazu dürfen Backend Projekte andere
+Backend Projekte und Bibliotheken verwenden.
+
+
+## Datengetriebene Entwicklung
+
+In vielen Fällen wird die Umsetzung einer Idee von schon vorhandenen Daten getrieben. In unserem
+Beispiel verwenden wir eine bestehende Microsoft SQL Server Datenbank um unseren Prototyp und unsere
+UseCases zu beschreiben.
+
+Im Ordner `docker/db` befindet sich die Datei `create_db.sql` in der sich die DDL und einige
+Beispiel-Daten finden. Sofern Docker installiert ist kann im Verzeichnis `docker` einfach
+mittels docker-compose ein Container mit Datenbank gestartet werden.
+
+```bash
+docker-compose up -d
+```
+
+Sollte kein Docker verwendet werden können, muss eine Datenbank entweder im Netzwerk oder einer
+lokalen Installation erzeugt werden.
+
+![Datenbank Schema](schema.png)
+
+## Entwicklung Backend
+
+### Installieren TypeORM und typeorm-model-generator
+
+### Generierung der Entity
+
+### Definition Schnittstelle zwischen Backend und Frontend
+
+### API Endpunkte für Stammdaten
+
+### API Endpunkt für Reparaturen
+
+### Testen des Backends
+
+### Anpassen der Datenbank mittels Migration
+
+## Entwicklung Frontend
+
+## Schreiben von E2E Tests
+
+

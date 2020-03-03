@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  db:
+    container_name: mssql-workshop-prototype
+    image: microsoft/mssql-server-linux:2017-CU13
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=s4fePassword
+    volumes:
+      - ./db:/var/opt/mssql/testdata:ro
+      - ./db:/var/opt/mssql/backup
+    ports:
+      - 1433:1433
+    entrypoint: /var/opt/mssql/testdata/entrypoint.sh
