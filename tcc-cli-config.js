@@ -32,5 +32,9 @@ module.exports = {
             "07-backend-master-data/solution",
             "08-backend-repair-jobs/solution",
         ],
+        [
+            "08-backend-repair-jobs/solution",
+            "09-database-migration/solution",
+        ],
     ],
 };
