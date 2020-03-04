@@ -28,7 +28,7 @@ es Unterstützung für die Versionierung und automatisierte Datenbankschema-Migr
 ### Was ist NX?
 
 Nx ist eine Erweiterung und Aufsatz auf das Angular Command Line Interface.
-Es stellt einen Workspace bereit und bietet Werkzeuge zum Beispiel Code zu generieren,
+Es stellt einen Workspace bereit und bietet Werkzeuge um zum Beispiel Code zu generieren,
 das Build-System zu bedienen, oder aber auch Tests zu starten.
 
 Zusätzlich bietet Nx Werkzeuge um Abhängigkeiten innerhalb des Projekts zu steuern
@@ -80,7 +80,7 @@ Ergänze die `prototype/package.json` den Eintrag `scripts` um ein Script zum St
 ## Bibliothek für geteilten Code zwischen Backend und Frontend einrichten
 
 Um Code zwischen Backend und Frontend teilen zu können, schreiben wir geteilten Code
-in ein oder mehrere Bibliotheks-Projekte. Zu diesem Zweck bietet sich die Verwendung
+in ein oder mehrere Bibliothek-Projekte. Zu diesem Zweck bietet sich die Verwendung
 des `@nrwl/workspace` Schematic an.
 
 ```bash
@@ -90,7 +90,7 @@ ng g @nrwl/workspace:lib shared
 ## Abgrenzungen von Abhängigkeiten
 
 Um zu vermeiden das jedes Teilprojekt beliebig Code aus fremden Teilprojekten importieren kann,
-können wir Constraints setzen. Jedes Prokjekt kann in der `nx.json` Datei Tags besitzen. In 
+können wir Constraints setzen. Jedes Projekt kann in der `nx.json` Datei Tags besitzen. In 
 der `ts-lint.json` können diese genutzt werden um den Import auf bestimmte Tags zu beschränken.
 
 Füge in der nx.json zu jedem Teilprojekt ein Tag ein. Für das Frontend Projekt verwende den Tag
@@ -126,20 +126,110 @@ lokalen Installation erzeugt werden.
 
 ### Installieren TypeORM und typeorm-model-generator
 
+Aus einer bestehenden Datenbank möchten wir uns die Klassen des ORM-Mappings generieren lassen.
+Dazu nutzen wir im nächsten Schritt den `typeorm-model-generator`. Wir installieren die 
+Abhängigkeiten dazu gleich mit. Zusätzlich wird auch der Datenbank-Treiber für die Verbindung
+zum Microsoft SQL Server installiert.
+
+```bash
+npm install typeorm @nestjs/typeorm typeorm-model-generator mssql
+```
+
+In `apps/api/src/AppModule` muss im Decorator unter `imports` TypeormModule eingefügt werden.
+Sollte nicht die Datenbank über die `docker-compose.yml` verwendet werden, müssen eventuell 
+die Zugangsdaten angepasst werden.
+
+```typescript
+@Module({
+  imports: [TypeOrmModule.forRoot({
+    name: "default",
+    type: "mssql",
+    host: "localhost",
+    port: 1433,
+    username: "sa",
+    password: "s4fePassword",
+    database: "workshop_prototype",
+    schema: "dbo",
+    synchronize: false,
+    entities: []
+  })],
+  controllers: [AppController],
+  providers: [AppService]
+})
+export class AppModule {}
+```
+
+
 ### Generierung der Entity
+
+Um nun die Entities direkt aus der Datenbank erzeugen zu lassen, nutzen wir den 
+`typeorm-model-generator`. Sollte nicht die Datenbank über die `docker-compose.yml`
+verwendet werden, müssen eventuell die Zugangsdaten angepasst werden.
+
+```bash
+npx typeorm-model-generator -h localhost -d "workshop_prototype" -u sa -x s4fePassword -e mssql -o ./apps/api/src
+```
+
+Der Weg wie die Entities generiert werden führt dazu, dass wir in der Datei `apps/api/tsconfig.json`
+das Modul-system auf CommonJS umstellen müssen. 
+
+In `apps/api/src/app/app.module.ts` müssen die generierten Entity Klassen in das Array der `entries`
+eingetragen werden.
 
 ### Definition Schnittstelle zwischen Backend und Frontend
 
+Es ist sinnvoll die Entities nicht 1:1 vom Backend zum Frontend zu senden. Um diese Trennung besser umsetzbar
+zu machen wird im `api-interfaces` Projekt ein Vertrag in Form von Interfaces geschlossen.
+
+```typescript
+export interface IStandort {
+  id: number;
+  autolineId: string;
+  name: string;
+}
+
+export interface INiederlassung {
+  id: number;
+  gssn: string
+  name: string | null;
+  standorte: IStandort[]
+}
+
+export interface IKfz {
+  id: number;
+  regno: string | null;
+  besitzer: string | null;
+}
+
+export type IReperaturStatus = 'Termin' | 'Annahme' | 'Service' | 'Werkstatt' | 'Wäsche' | 'Abholung' | 'Abgeschlossen';
+
+export interface IReperatur {
+  id: number;
+  auftrag: string | null;
+  standort: IStandort,
+  kfz: IKfz,
+  reperaturStatus: IReperaturStatus
+}
+```
+
 ### API Endpunkte für Stammdaten
+
+Die Datenbank Zugriffe sollen in einem eigenen Service gekapselt sein. Mittels Angular CLI lässt sich ein neuer NestJS
+Service generieren. Im Datenbankservice kann per Injection die Connection injiziert werden.
+
+```bash
+ng generate @nestjs/schematics:service db --sourceRoot=apps/api/src/app --flat=true
+```
+
+In `apps/api/src/app/app.controller.ts` werden neue REST Endpunkte für GET Requests der Stammdaten eingefügt.
+
+```typescript
+@Get('niederlassung')
+  async getNiederlassungen(): Promise<Niederlassung[]> {
+    return this.dbService.loadAllNiederlassungen();
+  }
+```
 
 ### API Endpunkt für Reparaturen
 
-### Testen des Backends
-
 ### Anpassen der Datenbank mittels Migration
-
-## Entwicklung Frontend
-
-## Schreiben von E2E Tests
-
-
