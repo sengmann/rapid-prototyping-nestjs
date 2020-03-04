@@ -233,3 +233,70 @@ In `apps/api/src/app/app.controller.ts` werden neue REST Endpunkte für GET Requ
 ### API Endpunkt für Reparaturen
 
 ### Anpassen der Datenbank mittels Migration
+
+Muss im Zuge der Entwicklung die Datenbankstruktur angepasst werden, sollte die migration nicht manuell durch das Ausführen von SQL 
+Befehlen geschehen, sondern automatisch durch die Anwendung durchgeführt werden. Hierfür bietet TypeOrm Migrationsskripte an
+
+Erzeuge eine neue Date `ormconfig.json` im root des Projects
+Kopiere den folgenden Inhalt in die Datei
+```json
+{
+  "name": "default",
+  "username": "workshop_prototype",
+  "password": "s4fePassword",
+  "database": "workshop_prototype",
+  "schema": "dbo",
+  "synchronize": false,
+  "type": "mssql",
+  "host": "localhost",
+  "port": 1433,
+  "entities": ["apps/api/src/entities/*.js"],
+  "migrationsTableName": "custom_migration_table",
+  "migrations": ["apps/api/dist/migration/*.ts"],
+  "cli": {
+    "migrationsDir": "apps/api/src/migration"
+  }
+}
+```
+
+Füge folgendes script in die `package.json` hinzu um Migrationen erzeugen zu können
+```json
+"scripts": {
+  "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+}
+```
+
+Erzeuge eine neue Migration mit der wir der Tabelle `kfz` ein neues Column `farbe` hinzufügen wollen
+ 
+```bash
+typeorm migration:create -n AddKfzColorColumn
+```
+
+es wird eine Datei im Ordner `src/apps/api/src/migrations` erzeugt. Der Dateiname beginnt mit einem Zeitstempel. 
+Öffne die Datei und schreibe ein SQL Statement inerhalb der `run` Methode, das ein Column hinzufügt
+
+```typescript
+     public async up(queryRunner: QueryRunner): Promise<any> {
+         await queryRunner.query(`ALTER TABLE ...`);
+     }
+```
+
+Füge der OrmConfig in `apps/api/src/app/app.module.ts` folgende Einträge hinzu:
+
+```typescript
+    migrations: [
+      AddKfzColorColumn123456789 // Die Zufallszahl am Ende muss deiner Datei entsprechen
+    ],
+    migrationsRun: true,
+```
+
+Starte nun die Api mithilfe des Befehls `npm run start:api`.
+Beobachte wie der Tabelle ein neues Column hinzugefügt wurde
+
+Füge der Entity `Kfz.ts` die neue Property hinzu
+```typescript
+  @Column("varchar", { name: "farbe", nullable: true, length: 50 })
+  farbe: string | null;
+```
+
+erweitere ebenfalls das Interface `IKfz` um die neue property
