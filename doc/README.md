@@ -232,6 +232,15 @@ In `apps/api/src/app/app.controller.ts` werden neue REST Endpunkte für GET Requ
 
 ### API Endpunkt für Reparaturen
 
+Bisher werden die per Relation verbundenen Tabellen nicht mit geladen. Es wäre möglich die Daten zu laden und programmatisch
+wieder zusammen zu setzen. Dies ist jedoch unnötig. Es kann direkt in der Methode `Repository#find` in den Optionen angegeben
+werden die Relation mit zu laden. 
+
+```typescript
+this.connection.getRepository(Reperatur)
+      .find({ relations: ['reperaturStatus', 'standort', 'kfz'] });
+```
+
 ### Anpassen der Datenbank mittels Migration
 
 Muss im Zuge der Entwicklung die Datenbankstruktur angepasst werden, sollte die migration nicht manuell durch das Ausführen von SQL 
