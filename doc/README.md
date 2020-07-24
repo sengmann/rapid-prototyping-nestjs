@@ -18,7 +18,7 @@ von mehreren Anwendungen erfolgreich eingesetzt.
 Das Backend wird mit dem Framework NestJS entwickelt, das viele Konzepte analog
 zu Angular implementiert.
 
-Zur Anbindung an bestehende Microsoft SQL Server Datenbanken nutzen wir TypeORM.
+Zur Anbindung an bestehende Postgres SQL Datenbanken nutzen wir TypeORM.
 Diese Bibliothek ist ungefähr das, was JDBC im Java Umfeld ist. Es kann zu
 verschiedenen Datenbank-Systemen eine Verbindung herstellen. Zusätzlich gibt
 es Unterstützung für die Versionierung und automatisierte Datenbankschema-Migration.
@@ -31,13 +31,13 @@ Nx ist eine Erweiterung und Aufsatz auf das Angular Command Line Interface.
 Es stellt einen Workspace bereit und bietet Werkzeuge um zum Beispiel Code zu generieren,
 das Build-System zu bedienen, oder aber auch Tests zu starten.
 
-Zusätzlich bietet Nx Werkzeuge um Abhängigkeiten innerhalb des Projekts zu steuern
+Zusätzlich bietet Nx Werkzeuge, um Abhängigkeiten innerhalb des Projekts zu steuern
 und eine Möglichkeit die Verwendungen von Abhängigkeiten mit Constraints einzuschränken.
 
 ### Was ist ein Monorepo?
 
 Anstatt jedes Projekt in ein eigenes Repository zu legen, werden mehrere Projekte in
-dem selben Repository abgelegt. Dieses Vorgehen hat mehrere Vorteile:
+demselben Repository abgelegt. Dieses Vorgehen hat mehrere Vorteile:
 
 - Einfachere Wiederverwendung von Quellcode, da keine Versionen als Artefakt veröffentlicht werden müssen.
 - Bessere Verwaltung von Abhängigkeiten auf Fremd-Bibliotheken da diese für alle Teilprojekte gleich sind
@@ -143,10 +143,10 @@ die Zugangsdaten angepasst werden.
 @Module({
   imports: [TypeOrmModule.forRoot({
     name: "default",
-    type: "mssql",
+    type: "postgres",
     host: "localhost",
     port: 1433,
-    username: "sa",
+    username: "workshop_prototype",
     password: "s4fePassword",
     database: "workshop_prototype",
     schema: "dbo",
@@ -167,7 +167,7 @@ Um nun die Entities direkt aus der Datenbank erzeugen zu lassen, nutzen wir den
 verwendet werden, müssen eventuell die Zugangsdaten angepasst werden.
 
 ```bash
-npx typeorm-model-generator -h localhost -d "workshop_prototype" -u sa -x s4fePassword -e mssql -o ./apps/api/src
+npx typeorm-model-generator -h localhost -d "workshop_prototype" -u sa -x s4fePassword -e postgres -o ./apps/api/src
 ```
 
 Der Weg wie die Entities generiert werden führt dazu, dass wir in der Datei `apps/api/tsconfig.json`
