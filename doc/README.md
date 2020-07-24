@@ -8,12 +8,11 @@ Wir möchten Code zwischen Backend, Frontend und Bibliotheken teilen können.
 Eine gemeinsame Sprache in allen Teilprojekten zu verwenden bietet sich an.
 Auch soll die Einstiegshürde für neue Team-Mitglieder möglichst niedrig sein.
 Als Sprache bietet sich Typescript an, da es
-a) Entwicklern die bisher nur Javascript Erfahrung haben sich leicht einzuarbeiten
-b) Entwicklern die bisher OOP mit z.B.: Java entwicklet haben ein solides Typsystem bereitstellt
+a) Entwicklern die bisher nur Javascript Erfahrung haben erlaubt sich leicht einzuarbeiten.
+b) Entwicklern die bisher OOP mit z.B.: Java entwickelt haben ein solides Typsystem bereitstellt.
 
-Für das Frontend setzen wir auf Angular. Andere Frameworks wären genau so möglich.
-Angular bietet ein sehr gutes Gesamtpaket und wird in der bestehenden Umgebung
-von mehreren Anwendungen erfolgreich eingesetzt.
+Für das Frontend setzen wir auf Angular. Andere Frameworks wären genauso möglich.
+Angular bietet ein sehr gutes Gesamtpaket.
 
 Das Backend wird mit dem Framework NestJS entwickelt, das viele Konzepte analog
 zu Angular implementiert.
@@ -32,11 +31,11 @@ Es stellt einen Workspace bereit und bietet Werkzeuge um zum Beispiel Code zu ge
 das Build-System zu bedienen, oder aber auch Tests zu starten.
 
 Zusätzlich bietet Nx Werkzeuge, um Abhängigkeiten innerhalb des Projekts zu steuern
-und eine Möglichkeit die Verwendungen von Abhängigkeiten mit Constraints einzuschränken.
+und eine Möglichkeit die Verwendungen von mittels Constraints einzuschränken.
 
 ### Was ist ein Monorepo?
 
-Anstatt jedes Projekt in ein eigenes Repository zu legen, werden mehrere Projekte in
+Anstatt jedes Projekt in ein eigenes Repository zu legen, werden mehrere Teilprojekte in
 demselben Repository abgelegt. Dieses Vorgehen hat mehrere Vorteile:
 
 - Einfachere Wiederverwendung von Quellcode, da keine Versionen als Artefakt veröffentlicht werden müssen.
@@ -46,7 +45,8 @@ demselben Repository abgelegt. Dieses Vorgehen hat mehrere Vorteile:
 
 Es existieren aber auch Nachteile:
 
-- Sichtbarkeit kann nicht pro Teilprojekt gesteuert werden. Zugriff aufs Repository bedeutet Zugriff auf den gesamten Quellcode
+- Sichtbarkeit kann nicht pro Teilprojekt gesteuert werden. Zugriff aufs Repository bedeutet Lese- bzw. Schreibrechte 
+  auf dem gesamten Quellcode.
 - Nicht alle Build-Systeme unterstützen Monorepos und werden langsamer als separat gebaute Projekte.
 
 ### Monorepo mit NX
@@ -61,10 +61,10 @@ genau das tun.
 npx create-nx-workspace@latest
 ```
 
-Vergebe den Workspace Namen `tss` und den Application Namen `workshop-prototype`. Wähle das Preset
+Vergebe den Workspace Namen `tmp` und den Application Namen `workshop-prototype`. Wähle das Preset
 `Angular-Nest` aus und die Style Extension Sass.
 
-Sobald die Generierung abgeschlossen ist verschiebe den Inhalt des Verzeichnis `tss` in die Project-Root.
+Sobald die Generierung abgeschlossen ist, verschiebe den Inhalt des Verzeichnisses `tmp` in die Project-Root.
 
 Ergänze die `prototype/package.json` den Eintrag `scripts` um ein Script zum Starten des Backends.
 
@@ -89,16 +89,15 @@ ng g @nrwl/workspace:lib shared
 
 ## Abgrenzungen von Abhängigkeiten
 
-Um zu vermeiden das jedes Teilprojekt beliebig Code aus fremden Teilprojekten importieren kann,
+Um zu vermeiden, das jedes Teilprojekt beliebig Code aus anderen Teilen importieren kann,
 können wir Constraints setzen. Jedes Projekt kann in der `nx.json` Datei Tags besitzen. In 
-der `ts-lint.json` können diese genutzt werden um den Import auf bestimmte Tags zu beschränken.
+der `ts-lint.json` können diese genutzt werden, um den Import auf bestimmte Tags zu beschränken.
 
-Füge in der nx.json zu jedem Teilprojekt ein Tag ein. Für das Frontend Projekt verwende den Tag
-`scope:frontend`, für das API Projekt den Tag `scope:backend` und für die beiden Bibliotheken
-den Tag `scope:lib`.
+Füge in der nx.json zu jedem Teilprojekt ein Tag ein. Für das Frontend verwende den Tag
+`scope:frontend`, für das API Projekt `scope:backend` und für die beiden Bibliotheken `scope:lib`.
 
 Erweitere in der `ts-lint.json` die Einschränkung der Imports so, dass Projekte mit dem Tag `scope:lib`
-nur aus anderen Projekten mit dem Tag `scope:lib` importieren dürfen. Frontend-Projekte dürfen aus
+nur aus Projekten mit dem Tag `scope:lib` importieren dürfen. Frontend-Projekte dürfen aus
 anderen Frontend-Projekten importieren und aus Bibliotheken. Analog dazu dürfen Backend Projekte andere
 Backend Projekte und Bibliotheken verwenden.
 
@@ -106,11 +105,11 @@ Backend Projekte und Bibliotheken verwenden.
 ## Datengetriebene Entwicklung
 
 In vielen Fällen wird die Umsetzung einer Idee von schon vorhandenen Daten getrieben. In unserem
-Beispiel verwenden wir eine bestehende Microsoft SQL Server Datenbank um unseren Prototyp und unsere
+Beispiel verwenden wir eine bestehende Postgres Datenbank um unseren Prototyp und unsere
 UseCases zu beschreiben.
 
 Im Ordner `docker/db` befindet sich die Datei `create_db.sql` in der sich die DDL und einige
-Beispiel-Daten finden. Sofern Docker installiert ist kann im Verzeichnis `docker` einfach
+Beispiel-Daten finden. Sofern Docker installiert ist, kann im Verzeichnis `docker` einfach
 mittels docker-compose ein Container mit Datenbank gestartet werden.
 
 ```bash
@@ -127,15 +126,14 @@ lokalen Installation erzeugt werden.
 ### Installieren TypeORM und typeorm-model-generator
 
 Aus einer bestehenden Datenbank möchten wir uns die Klassen des ORM-Mappings generieren lassen.
-Dazu nutzen wir im nächsten Schritt den `typeorm-model-generator`. Wir installieren die 
-Abhängigkeiten dazu gleich mit. Zusätzlich wird auch der Datenbank-Treiber für die Verbindung
-zum Microsoft SQL Server installiert.
+Dazu nutzen wir im nächsten Schritt den `typeorm-model-generator`. Wir installieren mit dem folgenden 
+Befehl TypeORM, die Abhängigkeiten und den Treiber für die Verbindung. 
 
 ```bash
-npm install typeorm @nestjs/typeorm typeorm-model-generator mssql
+npm install typeorm @nestjs/typeorm typeorm-model-generator pg
 ```
 
-In `apps/api/src/AppModule` muss im Decorator unter `imports` TypeormModule eingefügt werden.
+In `apps/api/src/AppModule` muss im Decorator unter `imports` TypeOrmModule eingefügt werden.
 Sollte nicht die Datenbank über die `docker-compose.yml` verwendet werden, müssen eventuell 
 die Zugangsdaten angepasst werden.
 
@@ -146,10 +144,9 @@ die Zugangsdaten angepasst werden.
     type: "postgres",
     host: "localhost",
     port: 1433,
-    username: "workshop_prototype",
+    username: "postgres",
     password: "s4fePassword",
-    database: "workshop_prototype",
-    schema: "dbo",
+    database: "postgres",
     synchronize: false,
     entities: []
   })],
@@ -163,11 +160,11 @@ export class AppModule {}
 ### Generierung der Entity
 
 Um nun die Entities direkt aus der Datenbank erzeugen zu lassen, nutzen wir den 
-`typeorm-model-generator`. Sollte nicht die Datenbank über die `docker-compose.yml`
+`typeorm-model-generator`. Sollte nicht die `docker-compose.yml`
 verwendet werden, müssen eventuell die Zugangsdaten angepasst werden.
 
 ```bash
-npx typeorm-model-generator -h localhost -d "workshop_prototype" -u sa -x s4fePassword -e postgres -o ./apps/api/src
+npx typeorm-model-generator -h localhost -d "postgres" -u sa -x s4fePassword -e postgres -o ./apps/api/src
 ```
 
 Der Weg wie die Entities generiert werden führt dazu, dass wir in der Datei `apps/api/tsconfig.json`
@@ -178,7 +175,7 @@ eingetragen werden.
 
 ### Definition Schnittstelle zwischen Backend und Frontend
 
-Es ist sinnvoll die Entities nicht 1:1 vom Backend zum Frontend zu senden. Um diese Trennung besser umsetzbar
+Es ist sinnvoll die Entities nicht 1 : 1 vom Backend zum Frontend zu senden. Um diese Trennung besser umsetzbar
 zu machen wird im `api-interfaces` Projekt ein Vertrag in Form von Interfaces geschlossen.
 
 ```typescript
@@ -232,9 +229,9 @@ In `apps/api/src/app/app.controller.ts` werden neue REST Endpunkte für GET Requ
 
 ### API Endpunkt für Reparaturen
 
-Bisher werden die per Relation verbundenen Tabellen nicht mit geladen. Es wäre möglich die Daten zu laden und programmatisch
-wieder zusammen zu setzen. Dies ist jedoch unnötig. Es kann direkt in der Methode `Repository#find` in den Optionen angegeben
-werden die Relation mit zu laden. 
+Bisher werden die per Relation verbundenen Tabellen nicht mit geladen. Es wäre möglich die Daten zu holen und programmatisch
+wieder zusammenzusetzen. Dies ist jedoch nicht nötig. Es kann direkt in der Methode `Repository#find` in den Optionen angegeben
+werden, welche der Relationen geladen werden sollen. 
 
 ```typescript
 this.connection.getRepository(Reperatur)
@@ -243,18 +240,17 @@ this.connection.getRepository(Reperatur)
 
 ### Anpassen der Datenbank mittels Migration
 
-Muss im Zuge der Entwicklung die Datenbankstruktur angepasst werden, sollte die migration nicht manuell durch das Ausführen von SQL 
-Befehlen geschehen, sondern automatisch durch die Anwendung durchgeführt werden. Hierfür bietet TypeOrm Migrationsskripte an
+Muss im Zuge der Entwicklung die Datenbankstruktur angepasst werden, sollte die Migration nicht manuell durch das Ausführen von SQL 
+Befehlen geschehen, sondern automatisch durch die Anwendung durchgeführt werden. Hierfür bietet sich TypeOrm Migrationsskripte an.
 
-Erzeuge eine neue Date `ormconfig.json` im root des Projects
-Kopiere den folgenden Inhalt in die Datei
+Erzeuge eine neue Datei `ormconfig.json` im root des Projects und kopiere den folgenden Inhalt.
 ```json
 {
   "name": "default",
-  "username": "workshop_prototype",
+  "username": "postgres",
   "password": "s4fePassword",
-  "database": "workshop_prototype",
-  "schema": "dbo",
+  "database": "postgres",
+  "schema": "public",
   "synchronize": false,
   "type": "mssql",
   "host": "localhost",
@@ -270,19 +266,21 @@ Kopiere den folgenden Inhalt in die Datei
 
 Füge folgendes script in die `package.json` hinzu um Migrationen erzeugen zu können
 ```json
-"scripts": {
-  "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+{
+  "scripts": {
+   "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+  }
 }
 ```
 
-Erzeuge eine neue Migration mit der wir der Tabelle `kfz` ein neues Column `farbe` hinzufügen wollen
+Erzeuge eine neue Migration mit der wir der Tabelle `kfz` eine Spalte `farbe` hinzufügen wollen.
  
 ```bash
 typeorm migration:create -n AddKfzColorColumn
 ```
 
-es wird eine Datei im Ordner `src/apps/api/src/migrations` erzeugt. Der Dateiname beginnt mit einem Zeitstempel. 
-Öffne die Datei und schreibe ein SQL Statement inerhalb der `run` Methode, das ein Column hinzufügt
+es wird eine Datei im Ordner `src/apps/api/src/migrations` erzeugt. Der Name beginnt mit einem Zeitstempel. 
+Öffne die Datei und schreibe ein SQL Statement innerhalb der `run` Methode, das die Spalte hinzufügt.
 
 ```typescript
      public async up(queryRunner: QueryRunner): Promise<any> {
@@ -300,7 +298,7 @@ Füge der OrmConfig in `apps/api/src/app/app.module.ts` folgende Einträge hinzu
 ```
 
 Starte nun die Api mithilfe des Befehls `npm run start:api`.
-Beobachte wie der Tabelle ein neues Column hinzugefügt wurde
+Beobachte wie der Tabelle ein neues Column hinzugefügt wurde.
 
 Füge der Entity `Kfz.ts` die neue Property hinzu
 ```typescript
