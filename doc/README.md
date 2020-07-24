@@ -140,16 +140,17 @@ die Zugangsdaten angepasst werden.
 ```typescript
 @Module({
   imports: [TypeOrmModule.forRoot({
-    name: "default",
-    type: "postgres",
-    host: "localhost",
-    port: 1433,
-    username: "postgres",
-    password: "s4fePassword",
-    database: "postgres",
-    synchronize: false,
-    entities: []
-  })],
+      name: "default",
+      type: "postgres",
+      host: "localhost",
+      port: 5432,
+      username: "postgres",
+      password: "s4fePassword",
+      database: "postgres",
+      schema: "public",
+      synchronize: false,
+      entities: []
+    })],
   controllers: [AppController],
   providers: [AppService]
 })
