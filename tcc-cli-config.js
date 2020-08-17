@@ -17,7 +17,7 @@ module.exports = {
             "v02/04-backend-appointments-list",
         ],
         [
-            "v02/04-backend-appointment-list",
+            "v02/v02/04-backend-appointments-list",
             "v02/05-frontend-appointment-list",
         ],
         [
