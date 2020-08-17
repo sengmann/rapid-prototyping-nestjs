@@ -104,6 +104,87 @@ Backend Projekte und Bibliotheken verwenden.
 
 ## Datengetriebene Entwicklung
 
+In vielen Fällen wird die Umsetzung einer Idee von schon vorhandenen Daten getrieben. Im Moment verwenden
+wir der Einfachheit halber Mock-Daten. Später werden wir sehen wie wir Daten aus einer bestehenden Datenbank
+benutzen können.
+
+### Termine im Backend
+
+Wir beginnen damit das Backend um eine Route für Reparatur-Termine zu erweitern. Die Struktur beschreiben
+wir als Typescript Interface im Bibliothek-Projekt und Mock-Daten in Form einfacher Typescript Dateien 
+im Server. 
+
+```typescript
+/** types.d.ts */
+export interface Vehicle {
+  regNo: string;
+  owner: string;
+}
+
+export interface Appointment {
+  assignment: string;
+  branch: string;
+  vehicle: Vehicle;
+  status: string;
+}
+```
+
+```typescript
+export const APPOINTMENTS: Appointment[] = [/*...*/];
+```
+
+
+### Termine im Frontend anzeigen und bearbeiten
+
+Für die nächste Stufe möchten wir die Termine im Browser anzeigen. Dazu werden diese per Http-Client
+vom Server abgerufen. Der Abruf wird nicht von der anzuzeigenden Komponente selbst durchgeführt,
+sondern in einem Service gekapselt. Die Termine werden in Form einer Liste ausgegeben.
+
+Der nächste Schritt ist eine Detailansicht zu den einzelnen Terminen mit den allen Informationen.
+In dieser sollen auch ein Formular zur Bearbeitung enthalten sein. Wir erweitern die Termine um eine
+numerische ID um das Routing abbilden zu können. Das Speichern soll einen HTTP-Request auslösen. 
+
+Das gleiche Formular kann auch zum Hinzufügen neuer Termine verwendet werden.
+
+
+### Speichern der Termine im Server
+
+Wir erweitern den Controller der Termine um eine Methode zum Hinzufügen und eine zum Bearbeiten.
+
+
+### Öffnungszeiten für die einzelnen Reparatur-Standorte
+
+Nicht jeder unserer Standorte hat zu genau den gleichen Zeiten geöffnet. Wir erweitern unser Datenmodell
+um Öffnungszeiten. Das Abschicken des Formulars soll nur möglich sein, wenn die Filiale auch in der
+Zeit geöffnet hat.
+
+
+### Öffnungszeiten im Backend prüfen
+
+Nur das Absenden des Formulars zu blockieren ist nicht genug. Auch in unserem Server möchten wir
+verhindern, dass Termine angelegt werden, bei denen die Filiale nicht geöffnet ist. Die notwendige
+Prüfung verschieben wir aus dem Frontend in das Bibliothek-Projekt und verwenden den gleichen Code
+sowohl im Browser als auch in unserem Nest-Server.
+
+
+## Testen
+
+Bisher haben wir noch keine Tests geschrieben. Das wollen wir ändern. 
+
+
+## Persistenz mittels TypeORM
+
+Es gibt mehr als eine Möglichkeit unsere Daten über den Neustart des Backends hinweg zu erhalten.
+Eine davon ist die Anbindung unseres Backends an eine SQL-Datenbank. Bisher haben wir die Daten
+zusammen mit unserem Prototyp entwickelt. Oft liegen diese aber schon vor. 
+
+Das letzte Thema beschäftigt sich mit der Anbindung einer Datenbank an unseren Server. Zusätzlich
+beleuchten wir, wie vorhandene Datensätze für unser Prototyping nutzbar gemacht werden kann.
+
+.. !-------------------------------------------------------------------------------------------------------------
+
+## Datengetriebene Entwicklung
+
 In vielen Fällen wird die Umsetzung einer Idee von schon vorhandenen Daten getrieben. In unserem
 Beispiel verwenden wir eine bestehende Postgres Datenbank um unseren Prototyp und unsere
 UseCases zu beschreiben.

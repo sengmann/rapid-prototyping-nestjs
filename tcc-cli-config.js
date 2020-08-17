@@ -2,6 +2,7 @@ module.exports = {
     "merges": [
         [
             "master",
+            /*
             "01-init-workspace/solution"
         ],
         [
@@ -35,6 +36,7 @@ module.exports = {
         [
             "08-backend-repair-jobs/solution",
             "09-database-migration/solution",
+        */
         ],
     ],
 };
