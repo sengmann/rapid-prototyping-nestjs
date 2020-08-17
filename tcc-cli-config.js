@@ -2,6 +2,7 @@ module.exports = {
     "merges": [
         [
             "master",
+            "v02/01-create-workspace"
             /*
             "01-init-workspace/solution"
         ],
@@ -38,5 +39,9 @@ module.exports = {
             "09-database-migration/solution",
         */
         ],
+        [
+            "v02/01-create-workspace",
+            "v02/02-create-lib"
+        ]
     ],
 };
