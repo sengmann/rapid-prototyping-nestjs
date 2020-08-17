@@ -14,7 +14,7 @@ module.exports = {
         ],
         [
             "v02/03-constraints",
-            "v02/04-backend-appointments",
+            "v02/04-backend-appointments-list",
         ],
         [
             "v02/04-backend-appointment-list",
