@@ -66,12 +66,11 @@ Vergebe den Workspace Namen `tmp` und den Application Namen `workshop-prototype`
 
 Sobald die Generierung abgeschlossen ist, verschiebe den Inhalt des Verzeichnisses `tmp` in die Project-Root.
 
-Ergänze die `prototype/package.json` den Eintrag `scripts` um ein Script zum Starten des Backends.
+Ergänze die `package.json` den Eintrag `scripts` um ein Script zum Starten des Backends.
 
 ```json
 {
   "scripts": {
-    "start": "ng serve prototype",
     "start:api": "ng serve api"
   }
 }
