@@ -38,11 +38,7 @@ module.exports = {
         ],
         [
             "v02/09-shared-working-hours",
-            "v02/10-tests",
-        ],
-        [
-            "v02/10-tests",
-            "v02/11-typeorm"
+            "v02/10-typeorm"
         ],
     ],
 };
