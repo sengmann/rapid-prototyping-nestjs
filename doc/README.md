@@ -114,23 +114,91 @@ wir als Typescript Interface im Bibliothek-Projekt und Mock-Daten in Form einfac
 im Server. 
 
 ```typescript
-/** types.d.ts */
-export interface Vehicle {
-  regNo: string;
-  owner: string;
-}
-
+/** libs/api-interfaces/src/lib/api-interfaces.ts */
 export interface Appointment {
+  id?: number;
   assignment: string;
   branch: string;
-  vehicle: Vehicle;
+  vehicleOwner: string;
+  vehicleRegNo: string;
   status: string;
+  date: string;
+  time: string;
 }
 ```
 
-```typescript
-export const APPOINTMENTS: Appointment[] = [/*...*/];
+Wir erzeugen wir in unserem API Projekt einen Service und einen Controller mit jeweils dem Namen Appointments
+Dies kann über die Kommandozeile oder aber über die Visual Studio Code Extension `Nx Console` erfolgen. 
+*Achtung* bei den Schematics zu NestJS muss der Pfad in dem generiert werden soll explizit mit angegeben werden.
+
+![nx-console-module](nxconsole_generate_module.png)
+
+Die Nutzung der `Nx Console` erzeugt im Terminalfenster von Visual Studio Code den zur
+Generierung genutzten Befehl. Im folgenden werden nur noch die Kommandozeilen-Befehle
+aufgeführt.
+
+```bash
+ng generate @nestjs/schematics:service --name=appointments --sourceRoot=apps/api/src/app --no-interactive
+ng generate @nestjs/schematics:controller --name=appointments --sourceRoot=apps/api/src/app --no-interactive
 ```
+
+Die Termine beziehen wir aus einer Mock-Datei die parallel zum Service liegt.   
+
+```typescript
+/** apps/api/src/app/appointments/appointments.mock.ts */
+export const APPOINTMENTS: Appointment[] = [
+  {
+    id: 1,
+    assignment: '000-000-01',
+    branch: 'Dortmund',
+    status: 'Reperatur',
+    date: '2020-09-02',
+    time: "07:00",
+    vehicleOwner: "Sascha",
+    vehicleRegNo: "ES-WW-01"
+  },
+  {
+    id: 2,
+    assignment: '000-000-02',
+    branch: 'Berlin',
+    status: 'Abholung',
+    date: '2020-09-03',
+    time: "08:00",
+    vehicleOwner: "Tobi",
+    vehicleRegNo: "B-WW-33"
+  }
+];
+```
+
+Die Termine werden im Service synchron zur Verfügung gestellt. Dieser kann dann per 
+Dependency Injection im Controller konsumiert werden.
+
+```typescript
+/** apps/api/src/app/appointments/appointments.service.ts */
+@Injectable()
+export class AppointmentsService {
+  private appointments: Appointment[] = APPOINTMENTS;
+
+  getAll(): Appointment[] {
+    return this.appointments;
+  }
+}
+
+/** apps/api/src/app/appointments/appointments.controller.ts */
+@Controller('appointments')
+export class AppointmentsController {
+
+  constructor(private readonly appointmentService: AppointmentsService) {  }
+
+  @Get()
+  getAllApointments(): Appointment[] {
+    return this.appointmentService.getAll();
+  }
+}
+```
+
+Nachdem mit `npm run start:api` das Backend gestartet wurde, kann im Browser mit der URL
+`localhost:3333/api/appointments` getestet werden, ob sich die Termine abrufen lassen.
 
 
 ### Termine im Frontend anzeigen
