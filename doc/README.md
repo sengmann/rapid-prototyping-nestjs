@@ -265,8 +265,21 @@ export class AppointmentsController {
 }
 ```
 
-Im Frontend wird das Formular an die neue Backend Route zum Speichern angepasst.
+Im Frontend wird das Formular an die neue Backend Route zum Speichern angepasst. Der `AppointmentsService`
+im Client wird ebenso erweitert.
 
+```typescript
+/** apps/workshop-prototype/src/app/appointments/appointments.service.ts */
+export class AppointmentsService {
+  saveAppointment(id: number, appointment: Partial<Appointment>): Observable<Appointment> {
+    return this.http.patch<Appointment>('api/appointments/' + id, appointment)
+      .pipe(
+        tap(result => this.subject.next(this.subject.value.map(a => a.id === id ? result : a))),
+        switchMap(() => this.getById(id).pipe(take(1)))
+      );
+  }
+}
+```
 
 
 
@@ -276,6 +289,50 @@ Nicht jeder unserer Standorte hat zu genau den gleichen Zeiten geöffnet. Wir er
 um Öffnungszeiten. Das Abschicken des Formulars soll nur möglich sein, wenn die Filiale auch in der
 Zeit geöffnet hat.
 
+Um Entscheidungen zu den Öffnungszeiten fällen zu können, legen wir diese für die einzelnen Standorte 
+fest. Zur Überprüfung im Formular verwenden wir einen asynchronen Validator an der Gruppe. 
+
+```typescript
+/** apps/workshop-prototype/src/app/appointments/opening-hours-validator.service.ts */
+export const timeRegExp = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class OpeningHoursValidatorService {
+  constructor(private readonly appointmentsService: AppointmentsService) {}
+
+  openingHoursValidator(timeControlName: string, branchIdControlName: string): AsyncValidatorFn {
+    return (group: FormGroup) => {
+      const time = group.get(timeControlName)?.value;
+      const branchId = group.get(branchIdControlName)?.value;
+      return this.appointmentsService.getOpeningHoursPerBranch().pipe(
+        first(),
+        map((perBranch) => perBranch[branchId]),
+        map((openingHoursOfBranch) => {
+          if (time == null || openingHoursOfBranch == null) {
+            return { openingHours: 'Could not find time or opening hours' };
+          }
+
+          return isTimeInInterval(time, openingHoursOfBranch.openingHoursStart, openingHoursOfBranch.openingHoursEnd)
+            ? null
+            : {openingHours: `time ${time} is not in interval [${openingHoursOfBranch.openingHoursStart}, ${openingHoursOfBranch.openingHoursEnd}]`, };
+        })
+      );
+    };
+  }
+}
+
+function isTimeInInterval(time: string, start: string, end: string): boolean {
+  const allInCorrectFormat =
+    timeRegExp.test(time) && timeRegExp.test(start) && timeRegExp.test(end);
+  if (allInCorrectFormat === false) {
+    return false;
+  }
+
+  return allInCorrectFormat && time >= start && time <= end;
+}
+```
 
 ### Öffnungszeiten im Frontend und Backend prüfen
 
