@@ -341,10 +341,18 @@ verhindern, dass Termine angelegt werden, bei denen die Filiale nicht geöffnet 
 Prüfung verschieben wir aus dem Frontend in das Bibliothek-Projekt und verwenden den gleichen Code
 sowohl im Browser als auch in unserem Nest-Server.
 
+Die Funktion `isTimeInInterval` wandert in `libs/shared/src/lib/shared.ts`.
+Bisher wurden die Standorte im Client verwaltet. Für das Abrufen der Öffnungszeiten erzeugen wir
+einen neuen Controller.
 
-## Testen
+```bash
+ng generate @nestjs/schematics:controller --name=branches --sourceRoot=apps/api/src/app --no-interactive
+```
 
-Bisher haben wir noch keine Tests geschrieben. Das wollen wir ändern. 
+Die Interfaces werden in `libs/api-interfaces/src/lib/api-interfaces.ts` verschoben.
+
+Schlägt das Speichern des Termins fehl, weil dieser außerhalb der Öffnungszeiten stattfinden soll,
+wird ein Fehler mit dem Status Code Bad Request zum Frontend gesandt.
 
 
 ## Persistenz mittels TypeORM
