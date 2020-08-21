@@ -207,6 +207,16 @@ Für die nächste Stufe möchten wir die Termine im Browser anzeigen. Dazu werde
 vom Server abgerufen. Der Abruf wird nicht von der anzuzeigenden Komponente selbst durchgeführt,
 sondern in einem Service gekapselt. Die Termine werden in Form einer Liste ausgegeben.
 
+```bash
+ng generate @schematics/angular:module --name=appointments --routing --no-interactive
+ng generate @schematics/angular:service --name=appointments/appointments --no-interactive
+ng generate @schematics/angular:component --name=appointments/appointmentListRoute --no-interactive
+ng generate @schematics/angular:component --name=appointments/appointmentList --no-interactive
+```
+
+In der Komponente `AppointmentListRouteComponent` werden die Termine per Service geladen und
+in `AppointmentListComponent` per Input hereingereicht und angezeigt.
+
 
 ### Termine im Frontend bearbeiten
 
@@ -214,12 +224,50 @@ Der nächste Schritt ist eine Detailansicht zu den einzelnen Terminen mit den al
 In dieser sollen auch ein Formular zur Bearbeitung enthalten sein. Wir erweitern die Termine um eine
 numerische ID um das Routing abbilden zu können. Das Speichern soll einen HTTP-Request auslösen. 
 
-Das gleiche Formular kann auch zum Hinzufügen neuer Termine verwendet werden.
+Es wird eine neue Route für die Detailansicht angelegt und die Komponenten generiert.
 
+```bash
+ng generate @schematics/angular:component --name=appointments/appointmentDetailRoute --no-interactive
+ng generate @schematics/angular:component --name=appointments/appointmentDetail --no-interactive
+``` 
+
+Die `AppointmentDetailRouteComponent` liest die Id des Termins aus den Routen-Parametern aus und
+verwendet den Service um die `AppointmentDetailsComponent` anzuzeigen. Das Button zum Speichern
+soll im Moment nur eine Ausgabe in der Konsole machen.
 
 ### Speichern der Termine im Server
 
-Wir erweitern den Controller der Termine um eine Methode zum Hinzufügen und eine zum Bearbeiten.
+Wir erweitern den Controller der Termine um eine Methode zum Bearbeiten. Diese annotieren wir mit
+Patch. Der Service wird um eine Methode zum Aktualisieren eines Termins erweitert.
+
+```typescript
+/** apps/api/src/app/appointments/appointments.service.ts */
+export class AppointmentsService {
+  updateAppointment(id: number, appointment: Partial<Appointment>) {
+    const canidate: Appointment | undefined = this.appointments.find(a => a.id === id)
+    if (canidate === undefined) {
+      throw new Error(`no appointment with id ${id} found.`);
+    }
+    const patchedAppointment: Appointment = { ...canidate, ...appointment };
+    this.appointments = this.appointments.map(a => a.id === id ? patchedAppointment : a);
+    return patchedAppointment;
+  }
+}
+
+/** apps/api/src/app/appointments/appointments.controller.ts */
+@Controller('appointments')
+export class AppointmentsController {
+  @Patch(':id')
+  saveAppointment(@Param('id') id: string, @Body() appointment: Partial<Appointment>): Appointment {
+    console.log("id %o, appointment %o", id, appointment);
+    return this.appointmentService.updateAppointment(parseInt(id, 10), appointment);
+  }
+}
+```
+
+Im Frontend wird das Formular an die neue Backend Route zum Speichern angepasst.
+
+
 
 
 ### Öffnungszeiten für die einzelnen Reparatur-Standorte
