@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="save()">
+  <div>
+    <label>Owner</label>&nbsp;<input type="text" [formControl]="formModel.vehicleOwner">&nbsp;
+    <span class="error" *ngIf="formModel.vehicleOwner.invalid">Please provide an owner</span>
+  </div>
+  <div>
+    <label>Date</label>&nbsp;<input type="date" [formControl]="formModel.date">&nbsp;
+    <span class="error" *ngIf="formModel.date.invalid">Please provide a valid date</span>
+  </div>
+  <div>
+    <label>Time</label>&nbsp;<input type="time" [formControl]="formModel.time">&nbsp;
+    <span class="error" *ngIf="formModel.time.invalid">Please provide a valid time</span>
+  </div>
+  <div>
+    <label>Registration No</label>&nbsp;<input type="text" [formControl]="formModel.vehicleRegNo">&nbsp;
+    <span class="error" *ngIf="formModel.vehicleRegNo.invalid">Please provide a registration number</span>
+  </div>
+  <div>
+    <label>Branch</label>&nbsp;
+    <select [formControl]="formModel.branch">
+      <option value="Dortmund">Dortmund</option>
+      <option value="Berlin">Berlin</option>
+    </select>&nbsp;
+    <span class="error" *ngIf="formModel.branch.invalid">Please select a branch</span>
+    <span class="error" *ngIf="form.hasError('openingHours')">{{form.getError('openingHours')}}</span>
+  </div>
+  <div>
+    <label>Status</label>&nbsp;
+    <select [formControl]="formModel.status">
+      <option value="Reperatur">repair</option>
+      <option value="Abholung">ready for pickup</option>
+    </select>
+  </div>
+  <div><button type="submit" [disabled]="form.invalid">save</button></div>
+</form>
