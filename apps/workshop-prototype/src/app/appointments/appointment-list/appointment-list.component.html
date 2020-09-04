@@ -1,0 +1,6 @@
+<ul>
+  <li *ngFor="let appointment of appointments">
+    <a [routerLink]="[appointment.id]">{{appointment.vehicleOwner}} - {{appointment.vehicleRegNo}}
+      - {{appointment.date | date:'dd.MM.yyyy'}} {{ appointment.time }}</a>
+  </li>
+</ul>
