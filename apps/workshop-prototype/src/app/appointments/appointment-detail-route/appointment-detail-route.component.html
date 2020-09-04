@@ -1,0 +1,2 @@
+<a [routerLink]="['..']">back to list</a><br>
+<w11k-appointment-detail [appointment]="appointment$ | async" *ngIf="appointment$ | async" (appointmentSaved)="saveAppointment($event)"></w11k-appointment-detail>

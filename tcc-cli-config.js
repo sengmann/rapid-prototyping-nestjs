@@ -1,0 +1,44 @@
+module.exports = {
+    "merges": [
+        [
+            "master",
+            "v02/01-create-workspace",
+        ],
+        [
+            "v02/01-create-workspace",
+            "v02/02-create-lib",
+        ],
+        [
+            "v02/02-create-lib",
+            "v02/03-constraints",
+        ],
+        [
+            "v02/03-constraints",
+            "v02/04-backend-appointments-list",
+        ],
+        [
+            "v02/04-backend-appointments-list",
+            "v02/05-frontend-appointment-list",
+        ],
+        [
+            "v02/05-frontend-appointment-list",
+            "v02/06-frontend-appointment-details",
+        ],
+        [
+            "v02/06-frontend-appointment-details",
+            "v02/07-backend-appointment-details",
+        ],
+        [
+            "v02/07-backend-appointment-details",
+            "v02/08-frontend-working-hours",
+        ],
+        [
+            "v02/08-frontend-working-hours",
+            "v02/09-shared-working-hours",
+        ],
+        [
+            "v02/09-shared-working-hours",
+            "v02/10-testing"
+        ],
+    ],
+};
