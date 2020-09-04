@@ -1,0 +1,4 @@
+<a [routerLink]="['..']">back to list</a><br>
+<w11k-appointment-detail [appointment]="appointment$ | async" [openingHoursPerBranch]="openingHoursPerBranch$ | async"
+                         *ngIf="(appointment$ | async) && (openingHoursPerBranch$ | async)"
+                         (appointmentSaved)="saveAppointment($event)"></w11k-appointment-detail>
