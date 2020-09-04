@@ -1,0 +1,6 @@
+<ul>
+  <li *ngFor="let appointment of appointments">
+    {{appointment.vehicleOwner}} - {{appointment.vehicleRegNo}}
+    - {{appointment.date | date:'dd.MM.yyyy'}} {{ appointment.time }}
+  </li>
+</ul>
